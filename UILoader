@@ -72,11 +72,11 @@ local Library = {
 
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(0, 0, 14),
-        MainColor = Color3.fromRGB(1, 0, 14),
-        AccentColor = Color3.fromRGB(0, 132, 255),
-        OutlineColor = Color3.fromRGB(35, 35, 35),
-        FontColor = Color3.new(150, 150, 150),
+        BackgroundColor = Color3.fromRGB(15, 15, 15),
+        MainColor = Color3.fromRGB(25, 25, 25),
+        AccentColor = Color3.fromRGB(125, 85, 255),
+        OutlineColor = Color3.fromRGB(40, 40, 40),
+        FontColor = Color3.new(1, 1, 1),
         Font = Font.fromEnum(Enum.Font.Code),
 
         Red = Color3.fromRGB(255, 50, 50),
@@ -544,23 +544,22 @@ end
 
 --// Main Instances \\-
 local function ParentUI(UI: Instance)
-    pcall(protectgui, UI);
-
-    if not pcall(function()
-            UI.Parent = gethui()
-        end) then
-        UI.Parent = Library.LocalPlayer:WaitForChild("PlayerGui", math.huge)
+    local success, err = pcall(function()
+        UI.Parent = game:GetService("CoreGui")
+    end)
+    if not success then
+        warn("Failed to parent UI to CoreGui: " .. err)
     end
 end
 
-local ScreenGui = New("ScreenGui", {
+local CoreGuiInstance = New("ScreenGui", {
     Name = "Obsidian",
     DisplayOrder = 999,
     ResetOnSpawn = false,
 })
-ParentUI(ScreenGui)
-Library.ScreenGui = ScreenGui
-ScreenGui.DescendantRemoving:Connect(function(Instance)
+ParentUI(CoreGuiInstance)
+Library.CoreGui = CoreGuiInstance
+CoreGuiInstance.DescendantRemoving:Connect(function(Instance)
     Library:RemoveFromRegistry(Instance)
     Library.DPIRegistry[Instance] = nil
 end)
