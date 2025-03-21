@@ -32,7 +32,8 @@ local Library = {
     DevicePlatform = nil,
     IsMobile = false,
 
-     -- Screen Gui Here
+     
+    ScreenGui = nil,
 
     ActiveTab = nil,
     Tabs = {},
