@@ -72,11 +72,11 @@ local Library = {
 
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(15, 15, 15),
-        MainColor = Color3.fromRGB(25, 25, 25),
-        AccentColor = Color3.fromRGB(125, 85, 255),
-        OutlineColor = Color3.fromRGB(40, 40, 40),
-        FontColor = Color3.new(1, 1, 1),
+        BackgroundColor = Color3.fromRGB(0, 0, 14),
+        MainColor = Color3.fromRGB(1, 0, 14),
+        AccentColor = Color3.fromRGB(0, 132, 255),
+        OutlineColor = Color3.fromRGB(35, 35, 35),
+        FontColor = Color3.new(150, 150, 150),
         Font = Font.fromEnum(Enum.Font.Code),
 
         Red = Color3.fromRGB(255, 50, 50),
@@ -552,9 +552,15 @@ local function ParentUI(UI: Instance)
         UI.Parent = Library.LocalPlayer:WaitForChild("PlayerGui", math.huge)
     end
 end
-ParentUI(CoreGui)
-Library.CoreGui = CoreGui
-CoreGui.DescendantRemoving:Connect(function(Instance)
+
+local ScreenGui = New("ScreenGui", {
+    Name = "Obsidian",
+    DisplayOrder = 999,
+    ResetOnSpawn = false,
+})
+ParentUI(ScreenGui)
+Library.ScreenGui = ScreenGui
+ScreenGui.DescendantRemoving:Connect(function(Instance)
     Library:RemoveFromRegistry(Instance)
     Library.DPIRegistry[Instance] = nil
 end)
