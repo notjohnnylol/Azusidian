@@ -544,22 +544,17 @@ end
 
 --// Main Instances \\-
 local function ParentUI(UI: Instance)
-    local success, err = pcall(function()
-        UI.Parent = game:GetService("CoreGui")
-    end)
-    if not success then
-        warn("Failed to parent UI to CoreGui: " .. err)
+    pcall(protectgui, UI);
+
+    if not pcall(function()
+            UI.Parent = gethui()
+        end) then
+        UI.Parent = Library.LocalPlayer:WaitForChild("PlayerGui", math.huge)
     end
 end
-
-local CoreGuiInstance = New("ScreenGui", {
-    Name = "Obsidian",
-    DisplayOrder = 999,
-    ResetOnSpawn = false,
-})
-ParentUI(CoreGuiInstance)
-Library.CoreGui = CoreGuiInstance
-CoreGuiInstance.DescendantRemoving:Connect(function(Instance)
+ParentUI(CoreGui)
+Library.CoreGui = CoreGui
+CoreGui.DescendantRemoving:Connect(function(Instance)
     Library:RemoveFromRegistry(Instance)
     Library.DPIRegistry[Instance] = nil
 end)
