@@ -72,11 +72,11 @@ local Library = {
 
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(15, 15, 15),
-        MainColor = Color3.fromRGB(25, 25, 25),
-        AccentColor = Color3.fromRGB(125, 85, 255),
-        OutlineColor = Color3.fromRGB(40, 40, 40),
-        FontColor = Color3.new(1, 1, 1),
+        BackgroundColor = Color3.fromRGB(0, 0, 14),
+        MainColor = Color3.fromRGB(1, 0, 14),
+        AccentColor = Color3.fromRGB(0, 132, 255),
+        OutlineColor = Color3.fromRGB(35, 35, 35),
+        FontColor = Color3.new(150, 150, 150),
         Font = Font.fromEnum(Enum.Font.Code),
 
         Red = Color3.fromRGB(255, 50, 50),
@@ -553,14 +553,14 @@ local function ParentUI(UI: Instance)
     end
 end
 
-local ScreenGui = New("ScreenGui", {
+local CoreGui = New("CoreGui", {
     Name = "Obsidian",
     DisplayOrder = 999,
     ResetOnSpawn = false,
 })
-ParentUI(ScreenGui)
-Library.ScreenGui = ScreenGui
-ScreenGui.DescendantRemoving:Connect(function(Instance)
+ParentUI(CoreGui)
+Library.CoreGui = CoreGui
+CoreGui.DescendantRemoving:Connect(function(Instance)
     Library:RemoveFromRegistry(Instance)
     Library.DPIRegistry[Instance] = nil
 end)
@@ -571,7 +571,7 @@ local ModalElement = New("TextButton", {
     Size = UDim2.fromScale(0, 0),
     Text = "",
     ZIndex = -999,
-    Parent = ScreenGui,
+    Parent = CoreGui,
 })
 
 --// Cursor
@@ -583,7 +583,7 @@ do
         Size = UDim2.fromOffset(9, 1),
         Visible = false,
         ZIndex = 999,
-        Parent = ScreenGui,
+        Parent = CoreGui,
     })
     New("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -620,7 +620,7 @@ do
         BackgroundTransparency = 1,
         Position = UDim2.new(1, -6, 0, 6),
         Size = UDim2.new(0, 300, 1, -6),
-        Parent = ScreenGui,
+        Parent = CoreGui,
     })
     NotificationList = New("UIListLayout", {
         HorizontalAlignment = Enum.HorizontalAlignment.Right,
@@ -722,7 +722,7 @@ function Library:MakeDraggable(UI: GuiObject, DragFrame: GuiObject, IgnoreToggle
         if
             (not IgnoreToggled and not Library.Toggled)
             or (IsMainWindow and Library.CantDragForced)
-            or not (ScreenGui and ScreenGui.Parent)
+            or not (CoreGui and CoreGui.Parent)
         then
             Dragging = false
             if Changed and Changed.Connected then
@@ -768,7 +768,7 @@ function Library:MakeResizable(UI: GuiObject, DragFrame: GuiObject, Callback: ()
         end)
     end)
     Library:GiveSignal(UserInputService.InputChanged:Connect(function(Input: InputObject)
-        if not UI.Visible or not (ScreenGui and ScreenGui.Parent) then
+        if not UI.Visible or not (CoreGui and CoreGui.Parent) then
             Dragging = false
             if Changed and Changed.Connected then
                 Changed:Disconnect()
@@ -859,7 +859,7 @@ function Library:AddDraggableButton(Text: string, Func)
         Position = UDim2.fromOffset(6, 6),
         TextSize = 16,
         ZIndex = 10,
-        Parent = ScreenGui,
+        Parent = CoreGui,
 
         DPIExclude = {
             Position = true,
@@ -892,7 +892,7 @@ function Library:AddDraggableButton(Text: string, Func)
 end
 
 function Library:AddDraggableMenu(Name: string)
-    local Background = Library:MakeOutline(ScreenGui, Library.CornerRadius, 10)
+    local Background = Library:MakeOutline(CoreGui, Library.CornerRadius, 10)
     Background.AutomaticSize = Enum.AutomaticSize.Y
     Background.Position = UDim2.fromOffset(6, 6)
     Background.Size = UDim2.fromOffset(0, 0)
@@ -977,7 +977,7 @@ function Library:AddContextMenu(
             TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
             Visible = false,
             ZIndex = 10,
-            Parent = ScreenGui,
+            Parent = CoreGui,
 
             DPIExclude = {
                 Position = true,
@@ -991,7 +991,7 @@ function Library:AddContextMenu(
             Size = typeof(Size) == "function" and Size() or Size,
             Visible = false,
             ZIndex = 10,
-            Parent = ScreenGui,
+            Parent = CoreGui,
 
             DPIExclude = {
                 Position = true,
@@ -1120,7 +1120,7 @@ local TooltipLabel = New("TextLabel", {
     TextWrapped = true,
     Visible = false,
     ZIndex = 20,
-    Parent = ScreenGui,
+    Parent = CoreGui,
 })
 TooltipLabel:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
     local X, Y = Library:GetTextBounds(
@@ -1222,7 +1222,7 @@ function Library:Unload()
     end
 
     Library.Unloaded = true
-    ScreenGui:Destroy()
+    CoreGui:Destroy()
     getgenv().Library = nil
 end
 
@@ -3998,7 +3998,7 @@ function Library:CreateWindow(WindowInfo)
             Position = WindowInfo.Position,
             Size = WindowInfo.Size,
             Visible = false,
-            Parent = ScreenGui,
+            Parent = CoreGui,
 
             DPIExclude = {
                 Position = true,
@@ -5000,7 +5000,7 @@ function Library:CreateWindow(WindowInfo)
                 Cursor.Position = UDim2.fromOffset(Mouse.X, Mouse.Y)
                 Cursor.Visible = Library.ShowCustomCursor
 
-                if not (Library.Toggled and ScreenGui and ScreenGui.Parent) then
+                if not (Library.Toggled and CoreGui and CoreGui.Parent) then
                     UserInputService.MouseIconEnabled = OldMouseIconEnabled
                     Cursor.Visible = false
                     RunService:UnbindFromRenderStep("ShowCursor")
