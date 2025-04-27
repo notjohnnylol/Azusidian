@@ -553,12 +553,12 @@ local function ParentUI(UI: Instance)
     end
 end
 
-local ScreenGui = New("ScreenGui", {
+local ScreenGui = New("CoreGui", {
     Name = "Obsidian",
     DisplayOrder = 999,
     ResetOnSpawn = false,
 })
-ParentUI(ScreenGui)
+ParentUI(CoreGui)
 Library.ScreenGui = ScreenGui
 ScreenGui.DescendantRemoving:Connect(function(Instance)
     Library:RemoveFromRegistry(Instance)
